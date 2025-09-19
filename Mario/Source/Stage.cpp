@@ -7,9 +7,11 @@ Stage mStage;
 * ‰Šú‰»ˆ—
 *******************************/
 void Stage_Initialize() {
-	//mStage.numStage = mGame.Stage;
+	mStage.oldStage = 0;
+	mStage.numStage = mGame.numStage;
 	for (int numY = 0; numY < mStage.ChipY; numY++) {
 		for (int numX = 0; numX < mStage.ChipX; numX++) {
+			mStage.MapBackChip[numY][numX] = 0;
 			mStage.MapChip[numY][numX] = 0;
 		}
 	}
@@ -19,15 +21,15 @@ void Stage_Initialize() {
 /******************************
 * I—¹ˆ—
 *******************************/
-//void Stage_Finalize() {
-//
-//}
+void Stage_Finalize() {
+
+}
 
 /******************************
 * XVˆ—
 *******************************/
 void Stage_Update() {
-	mStage.MapBackChip = { {
+	/*mStage.MapBackChip = { {
 			{16,16,16,16,16, 16,16,16,16,16, 16,16,16,16,16, 16},
 			{16,16,16,16,16, 16,16,16,16,16, 16,16,16,16,16, 16},
 			{16,16,16,16,16, 16,16,16,16,16, 16,16,16,16,16, 16},
@@ -58,7 +60,9 @@ void Stage_Update() {
 			{0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0},
 			{0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0},
 		}
-	};
+	};*/
+
+
 }
 
 /******************************

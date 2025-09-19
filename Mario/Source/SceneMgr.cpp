@@ -93,11 +93,11 @@ static void SceneMgr_FinalizeModule(eScene scene) {
 	case eScene_Menu: //指定画面がメニュー画面なら
 		Menu_Finalize(); //メニュー画面の終了処理処理をする
 		break;//以下略
-	/*
+	
 	case eScene_Game:
 		Game_Finalize();
 		break;
-	*/
+	
 	case eScene_Config:
 		Config_Finalize();
 		break;

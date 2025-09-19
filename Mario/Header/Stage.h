@@ -2,7 +2,8 @@
 #include <array>
 class Stage {
 	public:
-		//char numStage = 0;
+		char numStage;
+		char oldStage;
 		int MapImage[19];
 		int ClayPipeImage[4];
 		int QuestionImage[5];
@@ -17,7 +18,7 @@ class Stage {
 };
 
 void Stage_Initialize();//初期化
-//void Stage_Finalize();//終了処理
+void Stage_Finalize();//終了処理
 void Stage_Update();//更新
 void Stage_Draw();//描画
 
