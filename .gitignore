@@ -51,3 +51,5 @@
 *.json
 *.suo
 *.vsidx
+*.db*
+*.open*
