@@ -1,4 +1,8 @@
 #include "DxLib.h"
+#include <fstream>
+#include <sstream>
+#include <iostream>
+#include <string>
 #include "Stage.h"
 #include "Game.h"
 
@@ -7,6 +11,7 @@ Stage mStage;
 * 初期化処理
 *******************************/
 void Stage_Initialize() {
+	//マップチップ初期化処理
 	mStage.oldStage = 0;
 	mStage.numStage = mGame.numStage;
 	for (int numY = 0; numY < mStage.ChipY; numY++) {
@@ -29,40 +34,11 @@ void Stage_Finalize() {
 * 更新処理
 *******************************/
 void Stage_Update() {
-	/*mStage.MapBackChip = { {
-			{16,16,16,16,16, 16,16,16,16,16, 16,16,16,16,16, 16},
-			{16,16,16,16,16, 16,16,16,16,16, 16,16,16,16,16, 16},
-			{16,16,16,16,16, 16,16,16,16,16, 16,16,16,16,16, 16},
-			{16,16,16,16,16, 16,16,16,16,16, 16,16,16,16,16, 16},
-			{16,16,16,16,16, 16,16,16,16,16, 16,16,16,16,16, 16},
-			{16,16,16,16,16, 16,16,16,16,16, 16,16,16,16,16, 16},
-			{16,16,16,16,16, 16,16,16,16,16, 16,16,16,16,16, 16},
-			{16,16,16,16,16, 16,16,16,16,16, 16,16,16,16,16, 16},
-			{16,16,16,16,16, 16,16,16,16,16, 16,16,16,16,16, 16},
-			{16,16,16,16,16, 16,16,16,16,16, 16,16,16,16,16, 16},
-			{16,16,16,16,16, 16,16,16,16,16, 16,16,16,16,16, 16},
-			{17,17,17,17,17, 17,17,17,17,17, 17,17,17,17,17, 17},
-			{17,17,17,17,17, 17,17,17,17,17, 17,17,17,17,17, 17},
-		}
-	};
-	mStage.MapChip = { {
-			{0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0},
-			{0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0},
-			{0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0},
-			{0,0,0,0,0, 0,0,7,5,9, 0,0,0,0,0, 0},
-			{0,0,0,0,0, 0,0,6,4,8, 0,0,0,0,0, 0},
-			{0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0},
-			{0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0},
-			{0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0},
-			{0,0,15,0,0, 0,0,0,0,0, 0,0,0,0,0, 0},
-			{0,10,14,11,0, 0,0,0,0,0, 0,0,0,0,0, 0},
-			{10,14,12,13,11, 0,0,0,0,0, 0,1,2,2,2, 3},
-			{0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0},
-			{0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0},
-		}
-	};*/
-
-
+	if (mStage.oldStage != mStage.numStage) {	//ステージ更新
+		Stage_File(mStage.oldStage, mStage.MapBackChip);
+		Stage_File(mStage.numStage, mStage.MapChip);
+		mStage.oldStage = mStage.numStage;
+	}
 }
 
 /******************************
@@ -73,10 +49,10 @@ void Stage_Draw() {
 		for (int numX = 0; numX < mStage.ChipX; numX++) {
 			//背景画像
 			int no = mStage.MapBackChip[numY][numX];
-			DrawGraph(numX * mStage.Chip, (numY * mStage.Chip) + mStage.DrawY, mStage.MapImage[no], FALSE);
+			DrawGraph(numX * mStage.ChipSize, (numY * mStage.ChipSize) + mStage.DrawY, mStage.MapImage[no], FALSE);
 			//表画像
 			no = mStage.MapChip[numY][numX];
-			DrawGraph(numX * mStage.Chip, (numY * mStage.Chip) + mStage.DrawY, mStage.MapImage[no], TRUE);
+			DrawGraph(numX * mStage.ChipSize, (numY * mStage.ChipSize) + mStage.DrawY, mStage.MapImage[no], TRUE);
 		}
 	}
 }
@@ -84,6 +60,7 @@ void Stage_Draw() {
 /******************************
 * 関数
 *******************************/
+//画像格納処理
 void Stage_Stroge() {
 	mStage.MapImage[0] = 0;			//画像無
 
@@ -120,4 +97,52 @@ void Stage_Stroge() {
 	//はてなブロック画像(MapChip25～29)
 	LoadDivGraph("images/Block/hatena.png", 4, 4, 1, 32, 32, mStage.QuestionImage);
 	mStage.QuestionImage[4] = LoadGraph("images/Block/kara_block.png");
+}
+
+//マップチップ情報格納処理
+void Stage_File(char No, int MapChip[mStage.ChipY][mStage.ChipX]) {
+	std::string filename;
+	
+	//ファイル名格納処理
+	if (No == 0) {
+		filename = "Stage/青背景.txt";
+	}
+	else {
+		filename = "Stage/" + std::to_string(No) + ".txt";
+	}
+
+	//ファイル情報格納処理
+	std::ifstream ifs(filename);
+	if (!ifs) {		//ファイルエラー処理
+		std::cerr << "ファイルを開けませんでした: " << filename << std::endl;
+		return;
+	}
+	else {			//読み込み処理
+		std::string line;
+		for (int numY = 0; numY < mStage.ChipY; numY++) {
+			if (!std::getline(ifs, line)) {	//エラー処理
+				std::cerr << "行数が不足(y = " << numY << ")" << std::endl;
+				return;
+			}
+
+			std::stringstream ss(line);
+			std::string token;
+			int numX = 0;
+			
+			while (std::getline(ss, token, ',')) {	 //カンマで分割
+				if (token.empty()) continue;	//空要素をスキップ
+
+				int value = std::stoi(token);	//文字列を整数変換
+				if (numX < mStage.ChipX) {
+					MapChip[numY][numX] = value;
+				}
+				numX++;
+			}
+
+			if (numX < mStage.ChipX) {
+				std::cerr << "列数が不足しています (y=" << numY << ", 読み込んだ数=" << numX << ")" << std::endl;
+				return;
+			}
+		}
+	}
 }

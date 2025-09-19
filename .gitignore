@@ -39,3 +39,15 @@
 
 # debug information files
 *.dwo
+
+#削除ファイル追加
+*.log
+*.tlog
+*.obj
+*.idb
+*.pdb
+*.ilk
+*.ipch
+*.json
+*.suo
+*.vsidx
