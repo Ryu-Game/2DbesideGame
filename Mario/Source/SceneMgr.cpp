@@ -28,20 +28,20 @@ void SceneMgr_Finalize() {
 * 更新処理
 *******************************/
 void SceneMgr_Update() {
-	if (mNextScene != eScene_None) { //次のシーンがセットされていたら
-		SceneMgr_FinalizeModule(mScene);//現在のシーンの終了処理を実行
-		mScene = mNextScene; //次のシーンを現在のシーンセット
-		mNextScene = eScene_None; //次のシーン情報をクリア
-		SceneMgr_InitializeModule(mScene); //現在のシーンを初期化
+	if (mNextScene != eScene_None) {		//次のシーンがセットされていたら
+		SceneMgr_FinalizeModule(mScene);	//現在のシーンの終了処理を実行
+		mScene = mNextScene;				//次のシーンを現在のシーンセット
+		mNextScene = eScene_None;			//次のシーン情報をクリア
+		SceneMgr_InitializeModule(mScene);	//現在のシーンを初期化
 	}
 	switch (mScene) {
-	case eScene_Menu:
+	case eScene_Menu:		//メニュー画面
 		Menu_Update();
-		break;//以下略
-	case eScene_Game:
+		break;
+	case eScene_Game:		//ゲーム画面
 		Game_Update();
 		break;
-	case eScene_Config:
+	case eScene_Config:		//設定画面
 		Config_Update();
 		break;
 	}
@@ -51,7 +51,7 @@ void SceneMgr_Update() {
 * 描画処理
 *******************************/
 void SceneMgr_Draw() {
-	switch (mScene) { //シーンによって処理を分岐
+	switch (mScene) {
 	case eScene_Menu: //現在の画面がメニュー画面なら
 		Menu_Draw(); //メニュー画面の描画処理をする
 		break;//以下略

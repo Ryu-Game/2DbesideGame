@@ -34,7 +34,8 @@ void Stage_Finalize() {
 * 更新処理
 *******************************/
 void Stage_Update() {
-	if (mStage.oldStage != mStage.numStage) {	//ステージ更新
+	//ステージ更新
+	if (mStage.oldStage != mStage.numStage) {	
 		Stage_File(mStage.oldStage, mStage.MapBackChip);
 		Stage_File(mStage.numStage, mStage.MapChip);
 		mStage.oldStage = mStage.numStage;
@@ -62,7 +63,8 @@ void Stage_Draw() {
 *******************************/
 //画像格納処理
 void Stage_Stroge() {
-	mStage.MapImage[0] = 0;			//画像無
+	//画像無
+	mStage.MapImage[0] = 0;			
 
 	//背景画像
 	mStage.MapImage[1] = LoadGraph("images/Background/ha0.png");
@@ -129,10 +131,10 @@ void Stage_File(char No, int MapChip[mStage.ChipY][mStage.ChipX]) {
 			std::string token;
 			int numX = 0;
 			
-			while (std::getline(ss, token, ',')) {	 //カンマで分割
-				if (token.empty()) continue;	//空要素をスキップ
+			while (std::getline(ss, token, ',')) {	//カンマで分割
+				if (token.empty()) continue;		//空要素をスキップ
 
-				int value = std::stoi(token);	//文字列を整数変換
+				int value = std::stoi(token);		//文字列を整数変換
 				if (numX < mStage.ChipX) {
 					MapChip[numY][numX] = value;
 				}
