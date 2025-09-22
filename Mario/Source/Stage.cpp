@@ -46,16 +46,19 @@ void Stage_Update() {
 * 描画処理
 *******************************/
 void Stage_Draw() {
+	const int DrawY = -16;
 	for (int numY = 0; numY < mStage.ChipY; numY++) {
 		for (int numX = 0; numX < mStage.ChipX; numX++) {
 			//背景画像
 			int no = mStage.MapBackChip[numY][numX];
-			DrawGraph(numX * mStage.ChipSize, (numY * mStage.ChipSize) + mStage.DrawY, mStage.MapImage[no], FALSE);
+			DrawGraph(numX * mStage.ChipSize, (numY * mStage.ChipSize) + DrawY, mStage.MapImage[no], FALSE);
 			//表画像
 			no = mStage.MapChip[numY][numX];
-			DrawGraph(numX * mStage.ChipSize, (numY * mStage.ChipSize) + mStage.DrawY, mStage.MapImage[no], TRUE);
+			DrawGraph(numX * mStage.ChipSize, (numY * mStage.ChipSize) + DrawY, mStage.MapImage[no], TRUE);
 		}
 	}
+
+	Stage_Debug();
 }
 
 /******************************
@@ -63,6 +66,10 @@ void Stage_Draw() {
 *******************************/
 //画像格納処理
 void Stage_Stroge() {
+	LoadDivGraph("images/Block/hatena.png", 4, 4, 1, mStage.ChipSize, mStage.ChipSize, mStage.MapImage);
+	for (int num = 0; num < 4; num++) {
+		mStage.MapImage[num + 24] = mStage.MapImage[num];
+	}
 	//画像無
 	mStage.MapImage[0] = 0;			
 
@@ -83,22 +90,25 @@ void Stage_Stroge() {
 	mStage.MapImage[14] = LoadGraph("images/Background/mountain_surface2.png");
 	mStage.MapImage[15] = LoadGraph("images/Background/mountain_up.png");
 	mStage.MapImage[16] = LoadGraph("images/Background/sora.png");
-	mStage.MapImage[17] = LoadGraph("images/Block/floor.png");
-	mStage.MapImage[18] = LoadGraph("images/Block/kai_block.png");
 
-	//ブロック画像(MapChip19～20)
-	mStage.BlockImage[0] = LoadGraph("images/Block/bloak_1.png");
-	mStage.BlockImage[1] = LoadGraph("images/Block/block.png");
+	//ブロック画像
+	mStage.MapImage[17] = LoadGraph("images/Block/bloak_1.png");
+	mStage.MapImage[18] = LoadGraph("images/Block/block.png");
 
-	//土管画像(MapChip21～24)
-	mStage.ClayPipeImage[0] = LoadGraph("images/Block/dokan_left_down.png");
-	mStage.ClayPipeImage[1] = LoadGraph("images/Block/dokan_left_up.png");
-	mStage.ClayPipeImage[2] = LoadGraph("images/Block/dokan_right_down.png");
-	mStage.ClayPipeImage[3] = LoadGraph("images/Block/dokan_right_up.png");
+	//土管画像
+	mStage.MapImage[19] = LoadGraph("images/Block/dokan_left_down.png");
+	mStage.MapImage[20] = LoadGraph("images/Block/dokan_left_up.png");
+	mStage.MapImage[21] = LoadGraph("images/Block/dokan_right_down.png");
+	mStage.MapImage[22] = LoadGraph("images/Block/dokan_right_up.png");
 
-	//はてなブロック画像(MapChip25～29)
-	LoadDivGraph("images/Block/hatena.png", 4, 4, 1, 32, 32, mStage.QuestionImage);
-	mStage.QuestionImage[4] = LoadGraph("images/Block/kara_block.png");
+	//地面画像
+	mStage.MapImage[23] = LoadGraph("images/Block/floor.png");
+
+	//はてなブロック画像(24～27は呼び出し時に格納)
+	mStage.MapImage[28] = LoadGraph("images/Block/kara_block.png");
+
+	//ゴール地面画像
+	mStage.MapImage[29] = LoadGraph("images/Block/kai_block.png");
 }
 
 //マップチップ情報格納処理
@@ -141,10 +151,39 @@ void Stage_File(char No, int MapChip[mStage.ChipY][mStage.ChipX]) {
 				numX++;
 			}
 
-			if (numX < mStage.ChipX) {
+			if (numX < mStage.ChipX) {	//エラー処理
 				std::cerr << "列数が不足しています (y=" << numY << ", 読み込んだ数=" << numX << ")" << std::endl;
 				return;
 			}
+		}
+	}
+}
+
+//ヒットボックス
+void Stage_HitBox() {
+	int numHitbox = 0;
+	int PosiY = -16;
+	for (int numY = 0; numY < mStage.ChipY; numY++) {
+		for (int numX = 0; numX < mStage.ChipX; numX++) {
+			numHitbox = mStage.MapBackChip[numY][numX];
+			if (numHitbox >= 18) {
+				mStage.MapHitBox[numY][numX][0] = numX * mStage.ChipSize;
+				mStage.MapHitBox[numY][numX][1] = (numY * mStage.ChipSize) + PosiY;
+				mStage.MapHitBox[numY][numX][2] = mStage.MapHitBox[numY][numX][0] + mStage.ChipSize;
+				mStage.MapHitBox[numY][numX][3] = mStage.MapHitBox[numY][numX][1] + mStage.ChipSize;
+			}
+		}
+	}
+}
+
+void Stage_Debug() {
+	int no = 0;
+	for (int numY = 0; numY < mStage.ChipY; numY++) {
+		for (int numX = 0; numX < mStage.ChipX; numX++) {
+			no = mStage.MapChip[numY][numX];
+			//if (no >= 18) {
+				DrawBox(mStage.MapHitBox[numY][numX][0], mStage.MapHitBox[numY][numX][1], mStage.MapHitBox[numY][numX][2], mStage.MapHitBox[numY][numX][3], GetColor(0, 0, 0), false);
+			//}
 		}
 	}
 }
