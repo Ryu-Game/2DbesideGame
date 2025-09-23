@@ -1,5 +1,6 @@
 #pragma once
 #include "Input.h"
+#include "Stage.h"
 static class Player {
 public:
 	int MoveX, MoveY;	//移動座標
@@ -8,7 +9,9 @@ public:
 
 	//HitBox
 	int PHitBox[4];		//right, top, left, bottom
-	int Size = 32;
+	const int Size = 32;
+	const int Center = 16;
+	bool StageHit;
 
 	//画像
 	int img;
@@ -23,5 +26,6 @@ void Player_Draw();			//描画
 void Player_Move(int iNowKey);		//移動処理
 void Player_Jump(int iNowKey);		//ジャンプ処理
 void Player_DrawSetting(int iNowky);	//画像設定
-void Player_HitBox();		//ヒットボックス
+bool Player_HitBoxJudge(int PlayerHitBox[4], int Hit[4]);		//ヒットボックス
+void Player_StageHit(int PlayerHitBox[4]);
 void Player_Debug();		//Debug処理

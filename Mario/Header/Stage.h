@@ -25,4 +25,5 @@ void Stage_Draw();			//•`‰æ
 
 void Stage_Stroge();		//‰æ‘œŠi”[ˆ—
 void Stage_File(char No, int MapChip[mStage.ChipY][mStage.ChipX]);		//ƒ}ƒbƒvƒ`ƒbƒvŠi”[ˆ—
+void Stage_HitBox();
 void Stage_Debug();

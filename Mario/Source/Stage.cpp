@@ -18,6 +18,9 @@ void Stage_Initialize() {
 		for (int numX = 0; numX < mStage.ChipX; numX++) {
 			mStage.MapBackChip[numY][numX] = 0;
 			mStage.MapChip[numY][numX] = 0;
+			for (int box = 0; box < 4; box++) {
+				mStage.MapHitBox[numY][numX][box] = 0;
+			}
 		}
 	}
 	Stage_Stroge();
@@ -40,25 +43,27 @@ void Stage_Update() {
 		Stage_File(mStage.numStage, mStage.MapChip);
 		mStage.oldStage = mStage.numStage;
 	}
+
+	Stage_HitBox();
 }
 
 /******************************
 * •`‰æˆ—
 *******************************/
 void Stage_Draw() {
-	const int DrawY = -16;
+	const int PosiY = -16;
 	for (int numY = 0; numY < mStage.ChipY; numY++) {
 		for (int numX = 0; numX < mStage.ChipX; numX++) {
 			//”wŒi‰æ‘œ
 			int no = mStage.MapBackChip[numY][numX];
-			DrawGraph(numX * mStage.ChipSize, (numY * mStage.ChipSize) + DrawY, mStage.MapImage[no], FALSE);
+			DrawGraph(numX * mStage.ChipSize, (numY * mStage.ChipSize) + PosiY, mStage.MapImage[no], FALSE);
 			//•\‰æ‘œ
 			no = mStage.MapChip[numY][numX];
-			DrawGraph(numX * mStage.ChipSize, (numY * mStage.ChipSize) + DrawY, mStage.MapImage[no], TRUE);
+			DrawGraph(numX * mStage.ChipSize, (numY * mStage.ChipSize) + PosiY, mStage.MapImage[no], TRUE);
 		}
 	}
 
-	Stage_Debug();
+	//Stage_Debug();
 }
 
 /******************************
@@ -176,13 +181,16 @@ void Stage_HitBox() {
 	}
 }
 
+/******************************
+* Debug
+*******************************/
 void Stage_Debug() {
 	int no = 0;
 	for (int numY = 0; numY < mStage.ChipY; numY++) {
 		for (int numX = 0; numX < mStage.ChipX; numX++) {
 			no = mStage.MapChip[numY][numX];
 			//if (no >= 18) {
-				DrawBox(mStage.MapHitBox[numY][numX][0], mStage.MapHitBox[numY][numX][1], mStage.MapHitBox[numY][numX][2], mStage.MapHitBox[numY][numX][3], GetColor(0, 0, 0), false);
+				DrawBox(mStage.MapHitBox[numY][numX][0], mStage.MapHitBox[numY][numX][1], mStage.MapHitBox[numY][numX][2], mStage.MapHitBox[numY][numX][3], GetColor(0, 0, 0), true);
 			//}
 		}
 	}
