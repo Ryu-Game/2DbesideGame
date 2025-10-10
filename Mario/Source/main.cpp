@@ -2,7 +2,7 @@
 #include "SceneMgr.h"
 #include "Input.h"
 
-int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
+int main() {
 	ChangeWindowMode(TRUE);				//ウィンドウモード変更
 	DxLib_Init();						//Dxライブラリ初期化
 	SetGraphMode(mgr.SCREEN_WIDTH, mgr.SCREEN_HEIGHT, 32);	//画面サイズ

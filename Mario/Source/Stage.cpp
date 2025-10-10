@@ -18,8 +18,8 @@ void Stage_Initialize() {
 		for (int numX = 0; numX < mStage.ChipX; numX++) {
 			mStage.MapBackChip[numY][numX] = 0;
 			mStage.MapChip[numY][numX] = 0;
-			for (int box = 0; box < 4; box++) {
-				mStage.MapHitBox[numY][numX][box] = 0;
+			for (int num = 0; num < 4; num++) {
+				mStage.MapHitBox[numY][numX][num] = 0;
 			}
 		}
 	}
@@ -42,9 +42,22 @@ void Stage_Update() {
 		Stage_File(mStage.oldStage, mStage.MapBackChip);
 		Stage_File(mStage.numStage, mStage.MapChip);
 		mStage.oldStage = mStage.numStage;
+		for (int numY = 0; numY < mStage.ChipY; numY++) {
+			for (int numX = 0; numX < mStage.ChipX; numX++) {
+				if (mStage.MapBackChip[numY][numX] >= 23) {
+					for (int num = 0; num < 4; num++) {
+						switch (num) {
+						case 0: mStage.MapHitBox[numY][numX][num] = numX * mStage.ChipSize;		//左
+						case 1: mStage.MapHitBox[numY][numX][num] = numY * mStage.ChipSize;		//上
+						case 2: mStage.MapHitBox[numY][numX][num] = numX * mStage.ChipSize + mStage.ChipSize;	//右
+						case 3: mStage.MapHitBox[numY][numX][num] = numX * mStage.ChipSize + mStage.ChipSize;	//下
+						}
+					}
+				}
+			}
+		}
 	}
-
-	Stage_HitBox();
+	
 }
 
 /******************************
@@ -164,34 +177,8 @@ void Stage_File(char No, int MapChip[mStage.ChipY][mStage.ChipX]) {
 	}
 }
 
-//ヒットボックス
-void Stage_HitBox() {
-	int numHitbox = 0;
-	int PosiY = -16;
-	for (int numY = 0; numY < mStage.ChipY; numY++) {
-		for (int numX = 0; numX < mStage.ChipX; numX++) {
-			numHitbox = mStage.MapBackChip[numY][numX];
-			if (numHitbox >= 18) {
-				mStage.MapHitBox[numY][numX][0] = numX * mStage.ChipSize;
-				mStage.MapHitBox[numY][numX][1] = (numY * mStage.ChipSize) + PosiY;
-				mStage.MapHitBox[numY][numX][2] = mStage.MapHitBox[numY][numX][0] + mStage.ChipSize;
-				mStage.MapHitBox[numY][numX][3] = mStage.MapHitBox[numY][numX][1] + mStage.ChipSize;
-			}
-		}
-	}
-}
-
 /******************************
 * Debug
 *******************************/
 void Stage_Debug() {
-	int no = 0;
-	for (int numY = 0; numY < mStage.ChipY; numY++) {
-		for (int numX = 0; numX < mStage.ChipX; numX++) {
-			no = mStage.MapChip[numY][numX];
-			//if (no >= 18) {
-				DrawBox(mStage.MapHitBox[numY][numX][0], mStage.MapHitBox[numY][numX][1], mStage.MapHitBox[numY][numX][2], mStage.MapHitBox[numY][numX][3], GetColor(0, 0, 0), true);
-			//}
-		}
-	}
 }

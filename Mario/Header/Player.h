@@ -1,6 +1,5 @@
 #pragma once
 #include "Input.h"
-#include "Stage.h"
 static class Player {
 public:
 	int MoveX, MoveY;	//移動座標
@@ -18,6 +17,7 @@ public:
 	int PlayerImage[9];	//画像格納
 private:
 }mPlayer;
+
 void Player_Initialize();	//初期化
 void Player_Finalize();		//終了処理
 void Player_Update();		//更新

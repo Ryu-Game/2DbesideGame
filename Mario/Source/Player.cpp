@@ -2,6 +2,7 @@
 #include "Player.h"
 #include "Input.h"
 #include "SceneMgr.h"
+#include "Stage.h"
 
 //変数
 int YDeath = 320;
@@ -118,10 +119,10 @@ void Player_Jump(int iNowKey) {
 
 //プレイヤーとの当たり判定処理
 bool Player_HitBoxJudge(int PlayerHitBox[4], int Hit[4]) {
-	if ((PlayerHitBox[1] <= Hit[3] && PlayerHitBox[0] >= Hit[2]) ||
-		(PlayerHitBox[1] <= Hit[3] && PlayerHitBox[2] <= Hit[0]) ||
-		(PlayerHitBox[3] >= Hit[1] && PlayerHitBox[0] >= Hit[2]) ||
-		(PlayerHitBox[3] >= Hit[1] && PlayerHitBox[2] <= Hit[0])){
+	if ((PlayerHitBox[1] <= Hit[3]) ||
+		(PlayerHitBox[1] <= Hit[3]) ||
+		(PlayerHitBox[3] >= Hit[1]) ||
+		(PlayerHitBox[3] >= Hit[1])){
 		return TRUE;
 	}
 	else {
@@ -131,27 +132,17 @@ bool Player_HitBoxJudge(int PlayerHitBox[4], int Hit[4]) {
 
 //プレイヤーとステージの当たり判定
 void Player_StageHit(int PlayerHitBox[4]) {
-	int Judge[4] = {	//プレイヤーとステージ
-			mPlayer.PHitBox[0] + mPlayer.Size,
-			mPlayer.PHitBox[1] - mPlayer.Size,
-			mPlayer.PHitBox[2] - mPlayer.Size,
-			mPlayer.PHitBox[3] + mPlayer.Size,
-	};
-
-	for (int numY = 0; numY < mStage.ChipY; numY++) {
-		for (int numX = 0; numX < mStage.ChipX; numX++) {
-			if (mStage.MapHitBox[numY][numX][0] <= Judge[0] &&
-				mStage.MapHitBox[numY][numX][1] >= Judge[1] &&
-				mStage.MapHitBox[numY][numX][2] >= Judge[2] &&
-				mStage.MapHitBox[numY][numX][3] <= Judge[3]) {
-					mPlayer.StageHit = Player_HitBoxJudge(mPlayer.PHitBox, mStage.MapHitBox[numY][numX]);
-					if (mPlayer.StageHit == TRUE) break;
+	int StageX, StageY;
+	StageX = mPlayer.MoveX / mStage.ChipSize;
+	StageY = mPlayer.MoveY / mStage.ChipSize;
+	for (int num = 0; num < 4; num++) {
+		switch(num){
+		case 0:	//左上
+			if (mStage.MapBackChip[StageY][StageX] >= 23) {
+				mPlayer.StageHit = Player_HitBoxJudge(mPlayer.PHitBox, mStage.MapHitBox[StageY][StageX]);
 			}
 		}
-		if (mPlayer.StageHit == TRUE) {
-			mPlayer.MoveY = mPlayer.oldMoveY;
-			break;
-		}
+		if (mPlayer.StageHit == TRUE)break;
 	}
 }
 
